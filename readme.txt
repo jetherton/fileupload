@@ -41,7 +41,7 @@ The "Insert file into description" link only works if the description box uses T
 	line 427-428:
 		$page_post_id = array("page" => $page, "post" => $post, "id" => $page->id);
 		Event::run('ushahidi_action.page_edit', $page_post_id);
-* themes/default/views/page.php
+* /themes/default/views/page.php
 	line 8: Event::run('ushahidi_action.page_extra', $incident_id);
 
 
