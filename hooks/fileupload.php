@@ -49,6 +49,7 @@ class fileupload {
 				case 'submit':
 					//Hook into the form on the frontend
 					Event::add('ushahidi_action.report_form_submit', array($this, '_incident_submit_upload_file'));
+					Event::add('ushahidi_action.report_form', array($this, '_incident_submit_upload_file'));
 					Event::add('ushahidi_action.report_add', array($this, '_incident_save_upload_file'));
 					break;
 				
