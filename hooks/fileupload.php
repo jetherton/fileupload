@@ -17,7 +17,7 @@ class fileupload {
 	{
 		// Hook into routing
 		Event::add('system.pre_controller', array($this, 'add'));
-		
+		$this->post_data = null; //initialize this for later use
 		
 	}
 	
@@ -34,8 +34,11 @@ class fileupload {
 			{
 				// Hook into the Report Add/Edit Form in Admin
 				case 'edit':
+
 					// Hook into the form itself on the admin side
 					Event::add('ushahidi_action.report_form_admin', array($this, '_incident_edit_upload_file'));
+					// hook in to get the data in the the form
+					Event::add('ushahidi_action.report_submit_admin', array($this, '_get_post_data'));
 					// Hook into the report_edit (post_SAVE) event
 					Event::add('ushahidi_action.report_edit', array($this, '_incident_save_upload_file'));
 					break;
@@ -48,8 +51,8 @@ class fileupload {
 				//Hook into frontend Submit View
 				case 'submit':
 					//Hook into the form on the frontend
-					Event::add('ushahidi_action.report_form_submit', array($this, '_incident_submit_upload_file'));
 					Event::add('ushahidi_action.report_form', array($this, '_incident_submit_upload_file'));
+					Event::add('ushahidi_action.report_submit', array($this, '_get_post_data'));
 					Event::add('ushahidi_action.report_add', array($this, '_incident_save_upload_file'));
 					break;
 				
@@ -67,6 +70,8 @@ class fileupload {
 				case 'pages':
 					//hook into the editing of pages
 					Event::add('ushahidi_action.page_form_admin', array($this, '_page_edit_upload_file'));
+					//hook in and get the post data
+					Event::add('ushahidi_action.page_submit', array($this, '_get_post_data'));
 					// Hook into the page_edit (post_SAVE) event
 					Event::add('ushahidi_action.page_edit', array($this, '_page_save_upload_file'));
 					break;
@@ -79,6 +84,12 @@ class fileupload {
 			Event::add('ushahidi_action.page_extra', array($this, '_page_view'));
 
 		}//end of if page
+	}
+	
+	/* Saves the post data for later use*/
+	public function _get_post_data()
+	{
+		$this->post_data = Event::$data;
 	}
 	
 	/*Renders the files that are associated with a page*/
@@ -166,9 +177,9 @@ class fileupload {
 	*/
 	public function _incident_save_upload_file()
 	{
-		$post = Event::$data["post"];
-		$incident = Event::$data["incident"];
-		$id = Event::$data["id"];
+		$post = $this->post_data;
+		$incident = Event::$data;
+		$id = $incident->id;
 		
 	
 		$this->save_upload_files("report", $incident, $post, $id);
@@ -181,9 +192,9 @@ class fileupload {
 	*/
 	public function _page_save_upload_file()
 	{
-		$post = Event::$data["post"];
-		$page = Event::$data["page"];
-		$id = Event::$data["id"];
+		$post = $this->post_data;
+		$page = Event::$data;
+		$id = $page->id;
 		
 	
 		$this->save_upload_files("page", $page, $post, $id);
@@ -216,7 +227,6 @@ class fileupload {
 			//check to see if there's a file that corresponds to this ID
 			if(array_key_exists($formIdPrefix.$i, $_FILES) && ($_FILES[$formIdPrefix.$i]['size'] > 0))
 			{
-				echo "  A valid file";
 				$filename = upload::save($formIdPrefix.$i);
 				//get just the file name
 				$new_filename = $_FILES[$formIdPrefix.$i]['name'];
