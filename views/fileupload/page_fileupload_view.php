@@ -1,6 +1,7 @@
 <div  class="content" style="margin-top:15px;">
 <hr/>
-	<h5 style="margin:2px;">
+
+	<h5 style="margin:2px;font-size:13pt;">
 		Files
 		<br/>
 		<span style="font-size:10px;">

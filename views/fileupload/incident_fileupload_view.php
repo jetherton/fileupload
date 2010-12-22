@@ -1,6 +1,6 @@
 <div  class="content" >
 
-	<h5>
+	<h5 style="font-size:13pt;">
 		Files
 		<br/>
 		<span style="font-size:10px;">
