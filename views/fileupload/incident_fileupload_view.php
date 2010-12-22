@@ -1,12 +1,12 @@
 <div  class="content" >
 
-	<h4>
+	<h5>
 		Files
 		<br/>
 		<span style="font-size:10px;">
 			Uploaded files associated with this report
 		</span>
-	</h4>
+	</h5>
 	<ul style="margin:15px;">
 		<?php
 			foreach ($files as $file) 
