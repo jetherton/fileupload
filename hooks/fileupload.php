@@ -233,7 +233,7 @@ class fileupload {
 				//make a folder if we need to
 				if (!is_dir(Kohana::config('upload.directory', TRUE).$type ."/".$item->id))
 				{
-					mkdir(Kohana::config('upload.directory', TRUE).$type ."/".$item->id, 0770, true);
+					mkdir(Kohana::config('upload.directory', TRUE).$type ."/".$item->id, 0777, true);
 				}
 				copy($filename, Kohana::config('upload.directory', TRUE).$type ."/".$item->id."/". $new_filename );
 
