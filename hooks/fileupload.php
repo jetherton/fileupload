@@ -36,7 +36,8 @@ class fileupload {
 				case 'edit':
 
 					// Hook into the form itself on the admin side
-					Event::add('ushahidi_action.report_form_admin', array($this, '_incident_edit_upload_file'));
+					//Event::add('ushahidi_action.report_form_admin', array($this, '_incident_edit_upload_file'));
+					Event::add('ushahidi_action.report_form_admin_after_time', array($this, '_incident_edit_upload_file'));					
 					// hook in to get the data in the the form
 					Event::add('ushahidi_action.report_submit_admin', array($this, '_get_post_data'));
 					// Hook into the report_edit (post_SAVE) event
