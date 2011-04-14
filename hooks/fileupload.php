@@ -206,6 +206,11 @@ class fileupload {
 	//handles both pages and reports
 	function save_upload_files($type, $item, $post, $id)
 	{
+		if(!isset($post["fileUpload_id"]))
+		{
+			return;
+		}
+	
 		$formIdPrefix = null;
 		$numberOfFileFields = 0;
 		

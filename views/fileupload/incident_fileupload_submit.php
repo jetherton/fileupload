@@ -40,7 +40,7 @@
 				add
 			</a>
 			Description: <input type="text" name="fileUpload_description_1" id="fileUpload_description_1" value=""/> <br/>
-			File: <input type="file" name="incident_fileUpload_1" value=""  style="width:100px; float:none;"class="text long" /> 			
+			File: <input type="file" name="incident_fileUpload_1" value=""  style="border:none;width:200px; float:none;"class="text long" /> 			
 			<input type="hidden" name="fileUpload_id" value="2" id="fileUpload_id">
 		</div>
 	</div>
