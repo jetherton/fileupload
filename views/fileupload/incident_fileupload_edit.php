@@ -74,11 +74,9 @@
 	}
 	?>
 	<h4>
-		Upload Files
+		<?php echo Kohana::lang('uploadfiles.uploadfiles');?>
 		<br/>
-		<span style="font-size:10px;">
-			Use this to upload files, such as PDFs, Word documents, and other files.
-		</span>
+		<span style="font-size:10px;"><?php echo Kohana::lang('uploadfiles.uploadfiles_description');?></span>
 	</h4>
 	<div id="divFileUpload" style="padding-left:20px;">
 
@@ -86,8 +84,8 @@
 			<a href="#" class="add" style="float:right; padding-right:20px;" onClick="addFileField('divFileUpload','incident_fileUpload','fileUpload_id','file'); return false;">
 				add
 			</a>
-			Description: <input type="text" name="fileUpload_description_1" id="fileUpload_description_1" value=""/> <br/>
-			File: <input type="file" name="incident_fileUpload_1" value=""  style="width:200px; float:none;"class="text long" /> 			
+			<?php echo Kohana::lang('uploadfiles.description');?> : <input type="text" name="fileUpload_description_1" id="fileUpload_description_1" value=""/> <br/>
+			<?php echo Kohana::lang('uploadfiles.file');?> : <input type="file" name="incident_fileUpload_1" value=""  style="width:200px; float:none;"class="text long" /> 			
 			<input type="hidden" name="fileUpload_id" value="2" id="fileUpload_id">
 		</div>
 	</div>

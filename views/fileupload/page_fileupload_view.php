@@ -1,12 +1,10 @@
 <div  class="content" style="margin-top:15px;">
 <hr/>
 
-	<h5 style="margin:2px;font-size:13pt;">
-		Files
+	<h5 style="margin:2px;font-size:13pt;"><?php echo Kohana::lang('uploadfiles.files');?>
 		<br/>
-		<span style="font-size:10px;">
-			Uploaded files associated with this page:
-		</span>
+		<span style="font-size:10px;"><?php echo Kohana::lang('uploadfiles.page');?>
+			</span>
 	</h5>
 	<ul style="padding-left:20px;">
 		<?php

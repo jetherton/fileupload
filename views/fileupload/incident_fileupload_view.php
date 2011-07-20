@@ -1,11 +1,7 @@
 <div  class="content" >
 
-	<h5 style="font-size:13pt;">
-		Files
-		<br/>
-		<span style="font-size:10px;">
-			Uploaded files associated with this report
-		</span>
+	<h5 style="font-size:13pt;"><?php echo Kohana::lang('uploadfiles.incident_files');?><br/>
+		<span style="font-size:10px;"><?php echo Kohana::lang('uploadfiles.uploaded');?></span>
 	</h5>
 	<ul style="margin:15px;">
 		<?php
