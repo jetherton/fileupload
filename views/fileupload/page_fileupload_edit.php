@@ -48,8 +48,8 @@
 	</script>
 
 
-	<h4><?php echo Kohana::lang('uploadfiles.uploaded_files');?><br/>
-		<span style="font-size:10px;"><?php echo Kohana::lang('uploadfiles.page');?>
+	<h4><?php echo Kohana::lang('fileupload.uploaded_files');?><br/>
+		<span style="font-size:10px;"><?php echo Kohana::lang('fileupload.page');?>
 			</span>
 	</h4>
 	<ul id="fileList">
@@ -67,22 +67,22 @@
 	</ul>
 	
 <p>	
-<div id="getFiles"><a href="#" onClick="getFilesForPage(document.getElementById('page_id').value, 'fileList'); return false;"><?php echo Kohana::lang('uploadfiles.refresh');?></a></div>	
+<div id="getFiles"><a href="#" onClick="getFilesForPage(document.getElementById('page_id').value, 'fileList'); return false;"><?php echo Kohana::lang('fileupload.refresh');?></a></div>	
 <br/>
 </p>
 
 	<h4>
-		<?php echo Kohana::lang('uploadfiles.uploadfiles');?>
+		<?php echo Kohana::lang('fileupload.uploadfiles');?>
 		<br/>
-		<span style="font-size:10px;"><?php echo Kohana::lang('uploadfiles.uploadfiles_description');?></span>		
+		<span style="font-size:10px;"><?php echo Kohana::lang('fileupload.uploadfiles_description');?></span>		
 	</h4>
 	<div id="divFileUpload">
 
 		<div class="row link-row-file" style="width: 420px;">
-			<a href="#" class="add" style="float:right;" onClick="addFileField('divFileUpload','page_fileUpload','fileUpload_id','file'); return false;"><?php echo Kohana::lang('uploadfiles.add');?>
+			<a href="#" class="add" style="float:right;" onClick="addFileField('divFileUpload','page_fileUpload','fileUpload_id','file'); return false;"><?php echo Kohana::lang('fileupload.add');?>
 			</a>
-			<?php echo Kohana::lang('uploadfiles.description');?>: <input type="text" name="fileUpload_description_1" id="fileUpload_description_1" value="" style="width:300px;"/> <br/>
-			<?php echo Kohana::lang('uploadfiles.file');?>: <input type="file" name="page_fileUpload_1" value=""  style="float:none; width:300px;"class="text long" /> 			
+			<?php echo Kohana::lang('fileupload.description');?>: <input type="text" name="fileUpload_description_1" id="fileUpload_description_1" value="" style="width:300px;"/> <br/>
+			<?php echo Kohana::lang('fileupload.file');?>: <input type="file" name="page_fileUpload_1" value=""  style="float:none; width:300px;"class="text long" /> 			
 			<input type="hidden" name="fileUpload_id" value="2" id="fileUpload_id" class="text long">
 		</div>
 	</div>

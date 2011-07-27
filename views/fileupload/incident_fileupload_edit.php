@@ -48,12 +48,10 @@
 	<?php if(count($files) > 0)
 	{
 	?>
-	<h4>
-		Uploaded Files
+	<h4><? echo Kohana::lang('fileupload.uploaded_files');?>
 		<br/>
-		<span style="font-size:10px;">
-			Uploaded files associated with this report
-		</span>
+		<span style="font-size:10px;"><? echo Kohana::lang('fileupload.uploaded');?>
+			</span>
 	</h4>
 	<ul>
 		<?php
@@ -74,18 +72,18 @@
 	}
 	?>
 	<h4>
-		<?php echo Kohana::lang('uploadfiles.uploadfiles');?>
+		<?php echo Kohana::lang('fileupload.uploadfiles');?>
 		<br/>
-		<span style="font-size:10px;"><?php echo Kohana::lang('uploadfiles.uploadfiles_description');?></span>
+		<span style="font-size:10px;"><?php echo Kohana::lang('fileupload.uploadfiles_description');?></span>
 	</h4>
 	<div id="divFileUpload" style="padding-left:20px;">
 
 		<div class="row link-row-file">
 			<a href="#" class="add" style="float:right; padding-right:20px;" onClick="addFileField('divFileUpload','incident_fileUpload','fileUpload_id','file'); return false;">
-				add
+				<?php echo Kohana::lang('fileupload.and');?>
 			</a>
-			<?php echo Kohana::lang('uploadfiles.description');?> : <input type="text" name="fileUpload_description_1" id="fileUpload_description_1" value=""/> <br/>
-			<?php echo Kohana::lang('uploadfiles.file');?> : <input type="file" name="incident_fileUpload_1" value=""  style="width:200px; float:none;"class="text long" /> 			
+			<?php echo Kohana::lang('fileupload.description');?> : <input type="text" name="fileUpload_description_1" id="fileUpload_description_1" value=""/> <br/>
+			<?php echo Kohana::lang('fileupload.file');?> : <input type="file" name="incident_fileUpload_1" value=""  style="width:200px; float:none;"class="text long" /> 			
 			<input type="hidden" name="fileUpload_id" value="2" id="fileUpload_id">
 		</div>
 	</div>

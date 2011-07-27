@@ -1,9 +1,9 @@
 <div  class="content" style="margin-top:15px;">
 <hr/>
 
-	<h5 style="margin:2px;font-size:13pt;"><?php echo Kohana::lang('uploadfiles.files');?>
+	<h5 style="margin:2px;font-size:13pt;"><?php echo Kohana::lang('fileupload.files');?>
 		<br/>
-		<span style="font-size:10px;"><?php echo Kohana::lang('uploadfiles.page');?>
+		<span style="font-size:10px;"><?php echo Kohana::lang('fileupload.page');?>
 			</span>
 	</h5>
 	<ul style="padding-left:20px;">
