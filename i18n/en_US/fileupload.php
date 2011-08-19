@@ -21,6 +21,7 @@ $lang = array(
 'uploaded_files' => 'Uploaded Files',
 'page' =>'Uploaded files associated with this page:',
 'refresh' =>'Refresh files for this page',
+'files'=>'Files',
 
 
 

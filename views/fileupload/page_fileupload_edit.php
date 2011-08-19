@@ -44,6 +44,7 @@
 				
 		function addFile(fileLink, fileTitle){
 			tinyMCE.execCommand("mceInsertContent",false,"<a href=\""+fileLink+"\">"+fileTitle+"</a>");
+			return false;
 		}
 	</script>
 

@@ -197,6 +197,8 @@ class fileupload {
 		$page = Event::$data;
 		$id = $page->id;
 		
+		
+		
 	
 		$this->save_upload_files("page", $page, $post, $id);
 
@@ -225,8 +227,7 @@ class fileupload {
 			$formIdPrefix = "page_fileUpload_";
 			$numberOfFileFields = $post["fileUpload_id"];
 		}
-		
-		
+			
 		//for each file that may or may not have been submitted
 		for($i = 0; $i < $numberOfFileFields; $i++)
 		{
@@ -277,10 +278,8 @@ class fileupload {
 				}
 				$fileupload_item->save(); 
 			}
-			
 		}
 	}
-	
 }
 
 new fileupload;
