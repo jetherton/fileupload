@@ -236,7 +236,9 @@ class fileupload {
 			{
 				$filename = upload::save($formIdPrefix.$i);
 				//get just the file name
-				$new_filename = $_FILES[$formIdPrefix.$i]['name'];
+				//remove any harmful characters
+				$harmful_characters = array('#', '&', '?', '*', '/');
+				$new_filename = str_replace($harmful_characters, '', $_FILES[$formIdPrefix.$i]['name']);
 				//make a folder if we need to
 				if (!is_dir(Kohana::config('upload.directory', TRUE).$type ."/".$item->id))
 				{
