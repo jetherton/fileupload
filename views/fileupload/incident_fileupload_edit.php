@@ -62,8 +62,9 @@
 				$file_name = $file->file_link;
 				print '<a href="'.$prefix.'/'.$file_name.'">'.$file->file_title.'</a><br>';
 				print "<span style=\"margin-left:10px;font-size:80%;\">";
-				print "<a href=\"#\" onclick=\"addFile('".$prefix."/".$file_name."','".$file->file_title."'); return false;\">Insert file into description</a>";
-				print "&nbsp;&nbsp;--&nbsp;&nbsp;<a style=\"color:red;\" href=\"#\" onClick=\"deleteFile('".$file->id."', 'file_".$file->id."'); return false;\" >".Kohana::lang('ui_main.delete')." file</a>";
+				//print "<a href=\"#\" onclick=\"addFile('".$prefix."/".$file_name."','".$file->file_title."'); return false;\">Insert file into description</a>";
+				//print "&nbsp;&nbsp;--&nbsp;&nbsp;";
+				print "<a style=\"color:red;\" href=\"#\" onClick=\"deleteFile('".$file->id."', 'file_".$file->id."'); return false;\" >".Kohana::lang('ui_main.delete')." file</a>";
 				print "</span></li>";
 			}
 		?>
