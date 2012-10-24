@@ -18,6 +18,7 @@ class fileupload {
 		// Hook into routing
 		Event::add('system.pre_controller', array($this, 'add'));
 		$this->post_data = null; //initialize this for later use
+		$this->milestone = null; //iniatilize this for later use
 		
 	}
 	
@@ -43,11 +44,15 @@ class fileupload {
 					Event::add('ushahidi_action.report_submit_members', array($this, '_get_post_data'));
 					// Hook into the report_edit (post_SAVE) event
 					Event::add('ushahidi_action.report_edit', array($this, '_incident_save_upload_file'));
+					Event::add('incidenttimeline_action.display_timeline_object', array($this, '_grab_milestone'));
+					Event::add('incidenttimeline_action.display_timeline_event', array($this, '_alter_timeline'));
 					break;
 				
 				// Hook into the Report view (front end)
 				case 'view':
 					Event::add('ushahidi_action.report_extra', array($this, '_incident_view'));
+					Event::add('incidenttimeline_action.display_timeline_object', array($this, '_grab_milestone'));
+					Event::add('incidenttimeline_action.display_timeline_event', array($this, '_alter_timeline'));
 					break;
 				
 				//Hook into frontend Submit View
@@ -63,6 +68,20 @@ class fileupload {
 					break;
 			}//end of switch
 		}//end of if reports
+		
+		if (Router::$controller == 'incidenttimeline')
+		{
+			switch (Router::$method)
+			{
+				// Hook into the Report Add/Edit Form in Admin
+				case 'edit':
+					Event::add('incidenttimeline_action.edit_milestone_form', array($this, '_milestone_edit_upload_file'));
+					Event::add('incidenttimeline_action.timeline_edit_post', array($this, '_get_post_data'));
+					Event::add('incidenttimeline_action.timeline_edit', array($this, '_milestone_save_upload_file'));
+					break;
+			}
+		}//end of incidenttimeline
+		
 
 		if (Router::$controller == 'manage')
 		{
@@ -86,6 +105,37 @@ class fileupload {
 			Event::add('ushahidi_action.page_extra', array($this, '_page_view'));
 
 		}//end of if page
+	}
+	
+	/* Grabs the current milestone object for use in inserting files*/
+	public function _grab_milestone()
+	{		
+		$this->milestone = Event::$data;
+		
+	}
+	
+	/* Used to create html for a milestone*/
+	public function _alter_timeline()
+	{
+		//find all the files associated with this incident
+		$files = ORM::factory('fileupload')
+			->where('incident_id', $this->milestone->id)
+			->where('association_type', 3)
+		->find_all();
+		if(count($files)>0)
+		{
+			$prefix = url::base().Kohana::config('upload.relative_directory');
+			$event = Event::$data;
+			$event['description'] .= "<strong>".Kohana::lang('fileupload.incident_files').':</strong><ul>';
+			foreach($files as $file)
+			{
+				
+				$file_name = $file->file_link;
+				$event['description'] .= '<li><a href="'.$prefix.'/'.$file_name.'">'.$file->file_title.'</a></li>';
+			}
+			$event['description'] .= '</ul>';
+			Event::$data = $event;
+		}
 	}
 	
 	/* Saves the post data for later use*/
@@ -148,6 +198,23 @@ class fileupload {
 		$form->render(TRUE);
 	}//end method
 	
+	public function  _milestone_edit_upload_file()
+	{
+		$id = Event::$data; //get the id of the incident
+		
+		//find all the files associated with this incident
+		$files = ORM::factory('fileupload')
+			->where('incident_id', $id)
+			->where('association_type', 3)
+			->find_all();
+	
+	
+		// Load the View
+		$form = View::factory('fileupload/incident_fileupload_edit');
+		$form->files = $files;
+		$form->incident = $id;
+		$form->render(TRUE);
+	}//end method
 	
 	/**
 	 * Show the web form to edit what files are assoicated with this page
@@ -172,6 +239,21 @@ class fileupload {
 		$form = View::factory('fileupload/incident_fileupload_submit');
 		$form->render(TRUE);
 	}//end method
+	
+	/**
+	 * For saving the files to the hard drive and updating the database
+	 */
+	public function _milestone_save_upload_file()
+	{
+		$post = $this->post_data;
+		$incident = Event::$data;
+		$id = $incident->id;
+	
+	
+		$this->save_upload_files("milestone", $incident, $post, $id);
+	
+	
+	}//end of method
 
 	
 	/**
@@ -209,32 +291,46 @@ class fileupload {
 	//handles both pages and reports
 	function save_upload_files($type, $item, $post, $id)
 	{
+		
 		if(!isset($post["fileUpload_id"]))
 		{
 			return;
 		}
+		
 	
 		$formIdPrefix = null;
 		$numberOfFileFields = 0;
+		$association_type = 0;
 		
 		$filenames = null;
 		if($type == "report")
 		{
 			$formIdPrefix = "incident_fileUpload_";
 			$numberOfFileFields = $post["fileUpload_id"];
+			$association_type = 1;
 		}
 		if($type == "page")
 		{
 			$formIdPrefix = "page_fileUpload_";
 			$numberOfFileFields = $post["fileUpload_id"];
+			$association_type = 2;
+		}
+		if($type == "milestone")
+		{
+			$formIdPrefix = "incident_fileUpload_";
+			$numberOfFileFields = $post["fileUpload_id"];
+			$association_type = 3;
 		}
 			
 		//for each file that may or may not have been submitted
 		for($i = 0; $i < $numberOfFileFields; $i++)
 		{
+
 			//check to see if there's a file that corresponds to this ID
 			if(array_key_exists($formIdPrefix.$i, $_FILES) && ($_FILES[$formIdPrefix.$i]['size'] > 0))
 			{
+			
+				
 				$filename = upload::save($formIdPrefix.$i);
 				//get just the file name
 				//remove any harmful characters
@@ -249,6 +345,8 @@ class fileupload {
 
 				// Remove the temporary file
 				unlink($filename);
+				
+				
 				
 				//update the DB
 				$fileupload_item = ORM::factory('fileupload');
@@ -269,14 +367,14 @@ class fileupload {
 				$fileupload_item->file_date = time();
 				
 				//set the type of item this file is associated with
-				if($type == "report")
+				if($type == "report" OR $type == "milestone")
 				{
-					$fileupload_item->association_type = 1;
+					$fileupload_item->association_type = $association_type;
 					$fileupload_item->incident_id = $item->id;
 				}
 				elseif($type == "page")
 				{
-					$fileupload_item->association_type = 2;
+					$fileupload_item->association_type = $association_type;
 					$fileupload_item->page_id = $item->id;
 				}
 				$fileupload_item->save(); 
