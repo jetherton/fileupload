@@ -79,6 +79,10 @@ class fileupload {
 					Event::add('incidenttimeline_action.timeline_edit_post', array($this, '_get_post_data'));
 					Event::add('incidenttimeline_action.timeline_edit', array($this, '_milestone_save_upload_file'));
 					break;
+					
+				case 'view':
+					Event::add('incidenttimeline_action.view_milestone_form', array($this, '_milestone_view'));
+					
 			}
 		}//end of incidenttimeline
 		
@@ -159,6 +163,28 @@ class fileupload {
 		$form->files = $files;
 		$form->incident = $id; 
 		$form->render(TRUE);
+	}
+	
+	
+	/**
+	 * Renders the files for a milestone
+	 */
+	public function _milestone_view()
+	{
+		$id = Event::$data; //get the id of the incident
+		//find all the files associated with this incident
+		$files = ORM::factory('fileupload')
+		->where('incident_id', $id)->where('association_type', 3)
+		->find_all();
+		
+		if(count($files) > 0)
+		{
+			// Load the View
+			$form = View::factory('fileupload/milestone_fileupload_view');
+			$form->files = $files;
+			$form->incident = $id;
+			$form->render(TRUE);
+		}
 	}
 	
 	/*Renders the files that are associated with a report*/
