@@ -18,12 +18,17 @@
 			
 		function addFileField(div, field, hidden_id, field_type) {
 			var id = document.getElementById(hidden_id).value;
-			$("#" + div).append("<div class=\"row link-row second\" id=\"" + field + "_" + id + "\"><a style=\"float:right;\" href=\"#\" class=\"add\" onClick=\"addFileField('" + div + "','" + field + "','" + hidden_id + "','" + field_type + "'); return false;\">add</a><a href=\"#\"  style=\"float:right;\" class=\"rem\"  onClick='removeFileField(\"#" + field + "_" + id + "\"); return false;'>remove</a>Description: <input type=\"text\" name=\"fileUpload_description_"+id+"\" id=\"fileUpload_description_"+id+"\"/> <br/>File:<input type=\"" + field_type + "\" name=\"" + field + "_" + id + "\" class=\"" + field_type + " long\" style=\"width:200px;float:none;\"/></div>");
+			$("#" + div).append("<div class=\"row link-row second\" id=\"" + field + "_" + id + "\"><a style=\"float:right;\" href=\"#\" class=\"add\" onClick=\"addFileField('" + div + "','" + field + "','" + hidden_id + "','" + field_type + "'); return false;\">add</a><a href=\"#\"  style=\"float:right;\" class=\"rem\"  onClick='removeFileField(\"#" + field + "_" + id + "\"); return false;'>remove</a>Description: <input type=\"text\" name=\"fileUpload_description_"+id+"\" id=\"fileUpload_description_"+id+"\"/> <br/>File:<input type=\"" + field_type + "\" name=\"" + field + "_" + id + "\" class=\"fileuploadinput " + field_type + " long\" style=\"width:200px;float:none;\"/></div>");
 			
 			$("#" + field + "_" + id).effect("highlight", {}, 800);
 
 			id = (id - 1) + 2;
 			document.getElementById(hidden_id).value = id;
+
+			 // register an event hanlder for on change events on the file inputs
+			  $('input.fileuploadinput').change(function(){
+				  $("#file_upload_status").show('slow').delay(2500).hide('slow');
+			  });
 		}
 
 		function removeFileField(id) {
@@ -40,6 +45,14 @@
 		function addFile(fileLink, fileTitle){
 			tinyMCE.execCommand("mceInsertContent",false,"<a href=\""+fileLink+"\">"+fileTitle+"</a>");
 		}
+
+
+		$(document).ready(function() {
+			  // register an event hanlder for on change events on the file inputs
+			  $('input.fileuploadinput').change(function(){
+				  $("#file_upload_status").show('slow').delay(2500).hide('slow');
+			  });
+			});
 </script>
 
 
@@ -84,10 +97,11 @@
 				<?php echo Kohana::lang('fileupload.and');?>
 			</a>
 			<?php echo Kohana::lang('fileupload.description');?> : <input type="text" name="fileUpload_description_1" id="fileUpload_description_1" value=""/> <br/>
-			<?php echo Kohana::lang('fileupload.file');?> : <input type="file" name="incident_fileUpload_1" value=""  style="width:200px; float:none;"class="text long" /> 			
+			<?php echo Kohana::lang('fileupload.file');?> : <input type="file" name="incident_fileUpload_1" value=""  style="width:200px; float:none;"class="fileuploadinput text long" /> 			
 			<input type="hidden" name="fileUpload_id" value="2" id="fileUpload_id">
-		</div>
+		</div>		
 	</div>
+	<div style="display:none;padding:5px;margin:5px;background:#ccc;" id="file_upload_status" ><?php echo Kohana::lang('fileupload.file_will_upload_incident') ?></div>
 
 
 </div>

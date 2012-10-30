@@ -22,7 +22,8 @@ $lang = array(
 'page' =>'Uploaded files associated with this page:',
 'refresh' =>'Refresh files for this page',
 'files'=>'Files',
-
+'file_will_upload_incident'=>'The file will be saved when the Idea is saved.',
+'file_will_upload_milestone'=>'The file will be saved when the milestone is saved.',
 
 
 );
