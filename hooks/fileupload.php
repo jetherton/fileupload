@@ -239,6 +239,7 @@ class fileupload {
 		$form = View::factory('fileupload/incident_fileupload_edit');
 		$form->files = $files;
 		$form->incident = $id;
+		$form->message = Kohana::lang('fileupload.file_will_upload_milestone');
 		$form->render(TRUE);
 	}//end method
 	

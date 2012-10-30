@@ -101,7 +101,7 @@
 			<input type="hidden" name="fileUpload_id" value="2" id="fileUpload_id">
 		</div>		
 	</div>
-	<div style="display:none;padding:5px;margin:5px;background:#ccc;" id="file_upload_status" ><?php echo Kohana::lang('fileupload.file_will_upload_incident') ?></div>
+	<div style="display:none;padding:5px;margin:5px;background:#ccc;" id="file_upload_status" ><?php echo isset($message) ? $message : Kohana::lang('fileupload.file_will_upload_incident') ?></div>
 
 
 </div>
