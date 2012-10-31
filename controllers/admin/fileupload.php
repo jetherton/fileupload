@@ -41,7 +41,7 @@ class Fileupload_Controller extends Admin_Controller
 			$file_link = $file->file_link;
 
 			// Delete Files from Directory
-			if (!empty($file_link))
+			if (!empty($file_link) AND file_exists(Kohana::config('upload.directory', TRUE) . $file_link))
 			{
 				unlink(Kohana::config('upload.directory', TRUE) . $file_link);
 			}

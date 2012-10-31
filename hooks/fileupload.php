@@ -37,7 +37,6 @@ class fileupload {
 				case 'edit':
 
 					// Hook into the form itself on the admin side
-					//Event::add('ushahidi_action.report_form_admin', array($this, '_incident_edit_upload_file'));
 					Event::add('ushahidi_action.report_form_admin', array($this, '_incident_edit_upload_file'));					
 					// hook in to get the data in the the form
 					Event::add('ushahidi_action.report_submit_admin', array($this, '_get_post_data'));
@@ -190,7 +189,12 @@ class fileupload {
 	/*Renders the files that are associated with a report*/
 	public function _incident_view()
 	{
-		$id = Event::$data; //get the id of the incident
+		//$id = Event::$data; //get the id of the incident
+		$id = 0;
+		if(isset(Router::$arguments[0]))
+		{
+			$id = Router::$arguments[0];
+		}
 		//find all the files associated with this incident
 		$files = ORM::factory('fileupload')
 				->where('incident_id', $id)->where('association_type', 1)
@@ -210,12 +214,16 @@ class fileupload {
 	 */
 	public function _incident_edit_upload_file()
 	{
-		$id = Event::$data; //get the id of the incident
+		//$id = Event::$data; //get the id of the incident
+		$id = 0;
+		if(isset(Router::$arguments[0]))
+		{
+			$id = Router::$arguments[0];
+		}
 		//find all the files associated with this incident
 		$files = ORM::factory('fileupload')
 				->where('incident_id', $id)->where('association_type', 1)
 				->find_all();
-				
 				
 		// Load the View		
 		$form = View::factory('fileupload/incident_fileupload_edit');
@@ -368,7 +376,15 @@ class fileupload {
 				{
 					mkdir(Kohana::config('upload.directory', TRUE).$type ."/".$item->id, 0777, true);
 				}
-				copy($filename, Kohana::config('upload.directory', TRUE).$type ."/".$item->id."/". $new_filename );
+				//make sure we have a unique file name
+				$prefix = "";
+				$counter = 0;
+				while(file_exists(Kohana::config('upload.directory', TRUE).$type ."/".$item->id."/". $prefix.$new_filename ))
+				{
+					$counter++;
+					$prefix = $counter.'_';
+				}
+				copy($filename, Kohana::config('upload.directory', TRUE).$type ."/".$item->id."/". $prefix.$new_filename );
 
 				// Remove the temporary file
 				unlink($filename);
@@ -377,7 +393,7 @@ class fileupload {
 				
 				//update the DB
 				$fileupload_item = ORM::factory('fileupload');
-				$fileupload_item->file_link = $type ."/".$item->id."/". $new_filename;
+				$fileupload_item->file_link = $type ."/".$item->id."/". $prefix.$new_filename;
 				
 				
 				if ( isset($post['fileUpload_description_'.$i]) && !empty($post['fileUpload_description_'.$i]) ) 
@@ -391,7 +407,7 @@ class fileupload {
 				}
 				
 				//set the time of this file being uploaded
-				$fileupload_item->file_date = time();
+				$fileupload_item->file_date = date('c');
 				
 				//set the type of item this file is associated with
 				if($type == "report" OR $type == "milestone")
