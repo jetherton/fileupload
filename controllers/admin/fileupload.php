@@ -46,10 +46,13 @@ class Fileupload_Controller extends Admin_Controller
 				unlink(Kohana::config('upload.directory', TRUE) . $file_link);
 			}
 			//check if that's the last thing in this directory?
-			$files_left = $this->getDirectoryList(dirname(Kohana::config('upload.directory', TRUE) . $file_link));
-			if(count($files_left) == 0)
-			{ //delete folder too
-				rmdir(dirname(Kohana::config('upload.directory', TRUE) . $file_link));
+			if(file_exists(dirname(Kohana::config('upload.directory', TRUE) . $file_link)))
+			{
+				$files_left = $this->getDirectoryList(dirname(Kohana::config('upload.directory', TRUE) . $file_link));
+				if(count($files_left) == 0)
+				{ //delete folder too
+					rmdir(dirname(Kohana::config('upload.directory', TRUE) . $file_link));
+				}
 			}
 			
 			// Finally Remove from DB
