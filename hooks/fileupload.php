@@ -155,13 +155,15 @@ class fileupload {
 		$files = ORM::factory('fileupload')
 				->where('page_id', $id)->where('association_type', 2)
 				->find_all();
-				
-				
-		// Load the View		
-		$form = View::factory('fileupload/page_fileupload_view');
-		$form->files = $files;
-		$form->incident = $id; 
-		$form->render(TRUE);
+
+		if(count($files) > 0)
+		{
+			// Load the View		
+			$form = View::factory('fileupload/page_fileupload_view');
+			$form->files = $files;
+			$form->incident = $id; 
+			$form->render(TRUE);
+		}
 	}
 	
 	
