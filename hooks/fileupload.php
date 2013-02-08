@@ -52,6 +52,7 @@ class fileupload {
 					Event::add('ushahidi_action.report_extra', array($this, '_incident_view'));
 					Event::add('incidenttimeline_action.display_timeline_object', array($this, '_grab_milestone'));
 					Event::add('incidenttimeline_action.display_timeline_event', array($this, '_alter_timeline'));
+					Event::add('usermsg.display_message_submit', array($this, '_usermsg_send'));
 					break;
 				
 				//Hook into frontend Submit View
@@ -67,6 +68,27 @@ class fileupload {
 					break;
 			}//end of switch
 		}//end of if reports
+		
+		//for the user message plugin
+		if(Router::$controller == 'usermsg')
+		{
+			switch(Router::$method)
+			{
+				case 'send_msg_report':
+					Event::add('usermsg.process_incoming_msg', array($this, '_usermsg_data'));
+					break;
+				case 'getmsg':
+					Event::add('usermsg.display_msg', array($this, '_usermsg_view'));
+					Event::add('usermsg.display_message_submit', array($this, '_usermsg_send'));
+					break;
+				case 'send_reply':
+					Event::add('usermsg.process_incoming_msg', array($this, '_usermsg_data'));
+					break;
+				case 'inbox':
+					Event::add('usermsg.delete', array($this, '_usermsg_delete'));
+					break;
+			}
+		}
 		
 		if (Router::$controller == 'incidenttimeline')
 		{
@@ -358,16 +380,20 @@ class fileupload {
 			$numberOfFileFields = $post["fileUpload_id"];
 			$association_type = 3;
 		}
-			
+		if($type == "usermsg")
+		{
+			$formIdPrefix = "usermsg_fileUpload_";
+			$numberOfFileFields = $post["fileUpload_id"];
+			$association_type = 4;
+		}
 		//for each file that may or may not have been submitted
 		for($i = 0; $i < $numberOfFileFields; $i++)
 		{
-
+		
 			//check to see if there's a file that corresponds to this ID
 			if(array_key_exists($formIdPrefix.$i, $_FILES) && ($_FILES[$formIdPrefix.$i]['size'] > 0))
 			{
-			
-				
+					
 				$filename = upload::save($formIdPrefix.$i);
 				//get just the file name
 				//remove any harmful characters
@@ -412,7 +438,7 @@ class fileupload {
 				$fileupload_item->file_date = date('c');
 				
 				//set the type of item this file is associated with
-				if($type == "report" OR $type == "milestone")
+				if($type == "report" OR $type == "milestone" OR $type=="usermsg")
 				{
 					$fileupload_item->association_type = $association_type;
 					$fileupload_item->incident_id = $item->id;
@@ -426,6 +452,74 @@ class fileupload {
 			}
 		}
 	}
-}
+	
+	/**
+	 * Used to render the file upload needed to send files
+	 * with messages. This needs the usermsg plugin to work.
+	 */
+	public function _usermsg_send()
+	{
+		$form = View::factory('fileupload/usermsg_fileupload_submit');
+		echo $form;
+	}
+	
+	/**
+	 * Used to process incoming file data from a message being sent.
+	 */
+	public function _usermsg_data()
+	{
+		$msg = Event::$data;
+		$post = $_POST;
+		$id = $msg->id;
+		$this->save_upload_files("usermsg", $msg, $post, $id);
+	}
+	
+	/**
+	 * Used to display the files that are contained in a message
+	 */
+	public function _usermsg_view()
+	{
+		$msg = Event::$data;
+		//find all the files associated with this incident
+		$files = ORM::factory('fileupload')
+		->where('incident_id', $msg->id)->where('association_type', 4)
+		->find_all();
+		
+		if(count($files) > 0)
+		{
+			// Load the View
+			echo '<br/><br/>';
+			$form = View::factory('fileupload/milestone_fileupload_view');
+			$form->files = $files;
+			$form->incident = $msg->id;
+			$form->render(TRUE);
+		}
+	}
+	
+	/**
+	 * if a message is deleted, delete the files along with it
+	 */
+	public function _usermsg_delete()
+	{
+		$msg = Event::$data;
+		//find all the files associated with this incident
+		$files = ORM::factory('fileupload')
+		->where('incident_id', $msg->id)->where('association_type', 4)
+		->find_all();
+		
+		foreach($files as $file)
+		{
+			$prefix = Kohana::config('upload.directory', TRUE);
+			if(file_exists($prefix.$file->file_link))
+			{
+				unlink($prefix.$file->file_link);
+			}
+			$file->delete();
+		}
+	}
+	
+	
+	
+}//end of class
 
 new fileupload;
