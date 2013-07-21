@@ -1,9 +1,6 @@
-<div  class="content" >
-
-	<h5 style="font-size:13pt;"><?php echo Kohana::lang('fileupload.incident_files');?><br/>
-		<span style="font-size:10px;"><?php echo Kohana::lang('fileupload.uploaded');?></span>
-	</h5>
-	<ul style="margin:15px;">
+<div  class="file_upload_content" >
+	
+	<ul >
 		<?php
 			foreach ($files as $file) 
 			{

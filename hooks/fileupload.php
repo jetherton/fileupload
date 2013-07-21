@@ -49,7 +49,7 @@ class fileupload {
 				
 				// Hook into the Report view (front end)
 				case 'view':
-					Event::add('ushahidi_action.report_extra', array($this, '_incident_view'));
+					Event::add('report_view.upload_files_display', array($this, '_incident_view'));
 					Event::add('incidenttimeline_action.display_timeline_object', array($this, '_grab_milestone'));
 					Event::add('incidenttimeline_action.display_timeline_event', array($this, '_alter_timeline'));
 					Event::add('usermsg.display_message_submit', array($this, '_usermsg_send'));
@@ -58,7 +58,7 @@ class fileupload {
 				//Hook into frontend Submit View
 				case 'submit':
 					//Hook into the form on the frontend
-					Event::add('ushahidi_action.report_form', array($this, '_incident_submit_upload_file'));
+					Event::add('ushahidi_action.file_upload', array($this, '_incident_submit_upload_file'));
 					Event::add('ushahidi_action.report_submit', array($this, '_get_post_data'));
 					Event::add('ushahidi_action.report_add', array($this, '_incident_save_upload_file'));
 					break;
@@ -423,7 +423,9 @@ class fileupload {
 				$fileupload_item = ORM::factory('fileupload');
 				$fileupload_item->file_link = $type ."/".$item->id."/". $prefix.$new_filename;
 				
+				$fileupload_item->file_title = $_FILES[$formIdPrefix.$i]['name'];
 				
+				/*
 				if ( isset($post['fileUpload_description_'.$i]) && !empty($post['fileUpload_description_'.$i]) ) 
 				{
 					$title =$post['fileUpload_description_'.$i];
@@ -433,6 +435,7 @@ class fileupload {
 				{
 					$fileupload_item->file_title = "NO DESCRIPTION GIVEN";
 				}
+				*/
 				
 				//set the time of this file being uploaded
 				$fileupload_item->file_date = date('c');
